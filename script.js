@@ -249,6 +249,8 @@ setUnit(unit);
 showPlaceholder();
 input.focus();
 
+document.getElementById('home-btn').addEventListener('click', resetToHome);
+
 unitBtns.forEach(btn => {
   btn.addEventListener('click', () => {
     setUnit(btn.dataset.unit);
@@ -758,6 +760,23 @@ function wireChartHover({ highPts, lowPts, highs, lows, xOf, pad, W, plotH }, da
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+
+function resetToHome() {
+  lastWeatherData = null;
+  input.value = '';
+
+  // Stop particles and fade back to the default sky gradient
+  if (bgRafId) { cancelAnimationFrame(bgRafId); bgRafId = null; }
+  clearTimeout(bgFlashTimer);
+  bgParticles = [];
+  bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+  currentBgType = null;
+  crossfadeBg('linear-gradient(180deg, #dbeafe 0%, #eff6ff 25%, #f0f4f8 65%)');
+  document.body.classList.remove('bg-dark');
+
+  showPlaceholder();
+  input.focus();
+}
 
 function saveRecentSearch(name, country) {
   recentSearches = [

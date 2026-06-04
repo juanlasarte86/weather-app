@@ -90,6 +90,20 @@ header h1 {
   color: #2d3748;
 }
 
+.home-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  padding: 0;
+  transition: opacity 0.15s;
+}
+
+.home-btn:hover  { opacity: 0.7; }
+.home-btn:active { opacity: 0.5; }
+
 /* ── Unit toggle ── */
 
 .unit-toggle {
