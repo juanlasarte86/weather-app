@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="weather-bg" aria-hidden="true">
+    <div id="weather-bg-next"></div>
+    <canvas id="bg-canvas"></canvas>
+    <div id="lightning-flash"></div>
+  </div>
+  <header>
+    <h1>Weather</h1>
+    <search>
+      <form id="search-form" role="search">
+        <label for="city-input">City</label>
+        <input
+          type="search"
+          id="city-input"
+          name="city"
+          placeholder="Enter a city name"
+          autocomplete="off"
+          autofocus
+          required
+        >
+        <button type="submit">Search</button>
+      </form>
+    </search>
+    <div class="unit-toggle" role="group" aria-label="Temperature unit">
+      <button class="unit-btn active" data-unit="C">°C</button>
+      <button class="unit-btn" data-unit="F">°F</button>
+    </div>
+  </header>
+
+  <main id="weather-results">
+    <p class="placeholder">Enter a city to see the current weather.</p>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
