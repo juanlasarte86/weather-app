@@ -25,9 +25,12 @@
           autocomplete="off"
           autofocus
           required
+          aria-autocomplete="list"
+          aria-controls="autocomplete-list"
         >
         <button type="submit">Search</button>
       </form>
+      <ul id="autocomplete-list" role="listbox" aria-label="City suggestions" hidden></ul>
     </search>
     <div class="unit-toggle" role="group" aria-label="Temperature unit">
       <button class="unit-btn active" data-unit="C">°C</button>

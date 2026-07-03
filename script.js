@@ -442,6 +442,94 @@ form.addEventListener('submit', async (e) => {
   await search(city);
 });
 
+// ── Autocomplete ─────────────────────────────────────────────────────────────
+
+const autocompleteList = document.getElementById('autocomplete-list');
+let acResults = [];
+let acActiveIndex = -1;
+let acTimer = null;
+
+function closeAutocomplete() {
+  autocompleteList.hidden = true;
+  autocompleteList.innerHTML = '';
+  acResults = [];
+  acActiveIndex = -1;
+}
+
+function setAcActive(index) {
+  autocompleteList.querySelectorAll('.autocomplete-item').forEach((el, i) => {
+    el.setAttribute('aria-selected', i === index ? 'true' : 'false');
+  });
+  acActiveIndex = index;
+}
+
+function renderAutocomplete(results) {
+  if (!results.length) { closeAutocomplete(); return; }
+  acResults = results;
+  acActiveIndex = -1;
+  const pin = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`;
+  autocompleteList.innerHTML = results.map((r, i) => {
+    const sub = [r.admin1, r.country_code].filter(Boolean).join(', ');
+    return `<li class="autocomplete-item" role="option" aria-selected="false" data-index="${i}">
+      ${pin}<span class="ac-name">${r.name}</span>${sub ? `<span class="ac-sub">${sub}</span>` : ''}
+    </li>`;
+  }).join('');
+  autocompleteList.hidden = false;
+
+  autocompleteList.querySelectorAll('.autocomplete-item').forEach(el => {
+    el.addEventListener('mousedown', e => {
+      e.preventDefault();
+      selectSuggestion(acResults[+el.dataset.index]);
+    });
+  });
+}
+
+function selectSuggestion(result) {
+  input.value = result.name;
+  closeAutocomplete();
+  search(result.name);
+}
+
+input.addEventListener('input', () => {
+  clearTimeout(acTimer);
+  const q = input.value.trim();
+  if (q.length < 2) { closeAutocomplete(); return; }
+  acTimer = setTimeout(async () => {
+    try {
+      const res = await fetch(
+        `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(q)}&count=5&language=en&format=json`
+      );
+      const data = await res.json();
+      if (input.value.trim() === q) renderAutocomplete(data.results || []);
+    } catch { /* network error — stay silent */ }
+  }, 250);
+});
+
+input.addEventListener('keydown', e => {
+  if (autocompleteList.hidden) return;
+  const items = autocompleteList.querySelectorAll('.autocomplete-item');
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    setAcActive(Math.min(acActiveIndex + 1, items.length - 1));
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    setAcActive(Math.max(acActiveIndex - 1, -1));
+  } else if (e.key === 'Enter' && acActiveIndex >= 0) {
+    e.preventDefault();
+    selectSuggestion(acResults[acActiveIndex]);
+  } else if (e.key === 'Escape') {
+    closeAutocomplete();
+  }
+});
+
+input.addEventListener('blur', () => setTimeout(closeAutocomplete, 150));
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('search')) closeAutocomplete();
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 async function search(city) {
   showLoading();
   submitBtn.disabled = true;
