@@ -310,6 +310,16 @@ main {
   text-transform: capitalize;
 }
 
+.weather-humidity {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.82rem;
+  color: #64748b;
+  font-weight: 500;
+  margin-top: 0.1rem;
+}
+
 /* ── Wind compass ── */
 
 .wind-info {

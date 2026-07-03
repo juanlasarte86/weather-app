@@ -462,7 +462,7 @@ async function search(city) {
     const weatherRes = await fetch(
       `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}` +
       `&current_weather=true` +
-      `&hourly=temperature_2m,weathercode,precipitation_probability` +
+      `&hourly=temperature_2m,weathercode,precipitation_probability,relative_humidity_2m` +
       `&daily=temperature_2m_max,temperature_2m_min,weathercode` +
       `&timezone=auto&forecast_days=5`
     );
@@ -936,6 +936,10 @@ function showWeather(data) {
   const chart       = buildChart(daily, days);
   const hourlyStrip = hourly ? buildHourlyStrip(hourly, currentTime) : '';
 
+  const currentHour = currentTime ? currentTime.slice(0, 13) : null;
+  const hourStart   = currentHour ? Math.max(0, hourly.time.findIndex(t => t.startsWith(currentHour))) : 0;
+  const humidity    = hourly?.relative_humidity_2m?.[hourStart] ?? null;
+
   resultsEl.innerHTML = `
     <article class="weather-card">
       <h2 class="weather-city">${name}, ${country}</h2>
@@ -943,6 +947,7 @@ function showWeather(data) {
       <div class="weather-icon">${makeIcon(weathercode)}</div>
       <p class="weather-temp">${toDisplay(temperature)}${unitLabel()}</p>
       <p class="weather-description">${label}</p>
+      ${humidity !== null ? `<p class="weather-humidity"><svg width="12" height="12" viewBox="0 0 24 24" fill="#60a5fa" aria-hidden="true"><path d="M12 2C6 10 4 14 4 16a8 8 0 0 0 16 0c0-2-2-6-8-14z"/></svg>${humidity}% humidity</p>` : ''}
       <div class="wind-info">
         <svg class="wind-compass" viewBox="0 0 64 64" style="--wd:${winddirection}deg">
           <circle cx="32" cy="32" r="26" fill="none" stroke="#e2e8f0" stroke-width="1.5"/>
