@@ -412,13 +412,14 @@ async function search(city) {
     const weatherRes = await fetch(
       `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}` +
       `&current_weather=true` +
+      `&hourly=temperature_2m,weathercode,precipitation_probability` +
       `&daily=temperature_2m_max,temperature_2m_min,weathercode` +
       `&timezone=auto&forecast_days=5`
     );
     const weatherData = await weatherRes.json();
-    const { temperature, weathercode, windspeed, winddirection } = weatherData.current_weather;
+    const { temperature, weathercode, windspeed, winddirection, time: currentTime } = weatherData.current_weather;
 
-    showWeather({ name, country, temperature, weathercode, windspeed, winddirection, daily: weatherData.daily });
+    showWeather({ name, country, temperature, weathercode, windspeed, winddirection, daily: weatherData.daily, hourly: weatherData.hourly, currentTime });
   } catch {
     showError(
       navigator.onLine
@@ -827,12 +828,43 @@ function dayName(dateStr) {
   return new Date(year, month - 1, day).toLocaleDateString('en-US', { weekday: 'short' });
 }
 
+function formatHour(timeStr) {
+  const h = parseInt(timeStr.split('T')[1], 10);
+  return `${h % 12 || 12} ${h >= 12 ? 'PM' : 'AM'}`;
+}
+
+function buildHourlyStrip(hourly, currentTime) {
+  // current_weather.time has minutes (e.g. "2026-07-04T07:15"); hourly slots are on the hour
+  const currentHour = currentTime.slice(0, 13); // "2026-07-04T07"
+  const start = Math.max(0, hourly.time.findIndex(t => t.startsWith(currentHour)));
+  const end   = Math.min(hourly.time.length, start + 24);
+
+  const cards = [];
+  for (let i = start; i < end; i++) {
+    const isNow  = i === start;
+    const temp   = toDisplay(hourly.temperature_2m[i]);
+    const code   = hourly.weathercode[i];
+    const precip = hourly.precipitation_probability?.[i] ?? 0;
+    const delay  = ((i - start) * 0.022).toFixed(3);
+
+    cards.push(`
+      <article class="hourly-card${isNow ? ' hourly-card--now' : ''}" style="animation-delay:${delay}s">
+        <span class="hourly-time">${isNow ? 'Now' : formatHour(hourly.time[i])}</span>
+        <div class="hourly-icon">${makeIcon(code)}</div>
+        <span class="hourly-temp">${temp}°</span>
+        <span class="hourly-precip">${precip >= 10 ? `${precip}%` : ''}</span>
+      </article>`);
+  }
+
+  return `<section class="hourly" aria-label="Hourly forecast">${cards.join('')}</section>`;
+}
+
 function showWeather(data) {
   lastWeatherData = data;
   if (!data.phrase) data.phrase = weatherPhrase(data.weathercode);
   saveRecentSearch(data.name, data.country);
   updateBackground(WMO_ICON[data.weathercode] ?? 'cloudy');
-  const { name, country, temperature, weathercode, windspeed, winddirection, daily, phrase } = data;
+  const { name, country, temperature, weathercode, windspeed, winddirection, daily, hourly, currentTime, phrase } = data;
   const { label } = wmoCondition(weathercode);
 
   const days = daily.time.map(dayName);
@@ -851,7 +883,8 @@ function showWeather(data) {
       </article>`;
   }).join('');
 
-  const chart = buildChart(daily, days);
+  const chart       = buildChart(daily, days);
+  const hourlyStrip = hourly ? buildHourlyStrip(hourly, currentTime) : '';
 
   resultsEl.innerHTML = `
     <article class="weather-card">
@@ -880,6 +913,7 @@ function showWeather(data) {
         </div>
       </div>
     </article>
+    ${hourlyStrip}
     <section class="forecast" aria-label="5-day forecast">
       ${forecastCards}
     </section>
