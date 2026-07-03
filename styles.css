@@ -361,6 +361,19 @@ main {
   letter-spacing: 0.07em;
 }
 
+/* ── Section labels ── */
+
+.section-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  text-align: left;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
 /* ── Forecast row ── */
 
 .forecast {

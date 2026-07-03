@@ -914,6 +914,7 @@ function showWeather(data) {
       </div>
     </article>
     ${hourlyStrip}
+    <h2 class="section-label">Weekly Forecast</h2>
     <section class="forecast" aria-label="5-day forecast">
       ${forecastCards}
     </section>
