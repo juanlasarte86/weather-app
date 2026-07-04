@@ -63,11 +63,22 @@ body {
 
 header h1 {
   transition: color 0.7s ease, text-shadow 0.7s ease;
+  /* Dual halo: a light glow rescues contrast if the bg is darker than
+     expected, a dark glow rescues it if the bg is lighter than expected.
+     Keeps the wordmark readable even when a theme's gradient stop under
+     the header doesn't match its assumed light/dark classification. */
+  text-shadow:
+    0 1px 3px rgba(255, 255, 255, 0.75),
+    0 0 14px rgba(255, 255, 255, 0.55),
+    0 1px 10px rgba(0, 0, 0, 0.12);
 }
 
 body.bg-dark header h1 {
   color: #f1f5f9;
-  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.55);
+  text-shadow:
+    0 1px 10px rgba(0, 0, 0, 0.55),
+    0 0 16px rgba(0, 0, 0, 0.4),
+    0 1px 2px rgba(255, 255, 255, 0.1);
 }
 
 .recent-label {
@@ -96,11 +107,17 @@ header h1 {
 
 .wm-axo {
   color: #ec4899;
-  transition: color 0.7s ease;
+  transition: color 0.7s ease, text-shadow 0.7s ease;
+  text-shadow:
+    0 1px 3px rgba(255, 255, 255, 0.75),
+    0 0 14px rgba(255, 255, 255, 0.55);
 }
 
 body.bg-dark .wm-axo {
   color: #f9a8d4;
+  text-shadow:
+    0 1px 8px rgba(0, 0, 0, 0.45),
+    0 0 16px rgba(0, 0, 0, 0.3);
 }
 
 .home-btn {
@@ -126,6 +143,11 @@ body.bg-dark .wm-axo {
   object-fit: contain;
   flex-shrink: 0;
   transition: transform 0.25s ease;
+  /* Dark contact shadow + soft light glow, so the artwork keeps an edge
+     against backgrounds close to its own pink/blue hues either way. */
+  filter:
+    drop-shadow(0 2px 6px rgba(0, 0, 0, 0.18))
+    drop-shadow(0 0 10px rgba(255, 255, 255, 0.4));
 }
 
 .home-btn:hover .logo-mark {

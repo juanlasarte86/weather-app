@@ -31,45 +31,50 @@ let currentBgType = null;
 const BG_THEMES = {
   sunny: {
     bg:        'linear-gradient(180deg, #38bdf8 0%, #7dd3fc 35%, #bae6fd 65%, #fef3c7 90%, #fffbeb 100%)',
-    dark:      false,
     particles: null,
   },
   partly: {
     bg:        'linear-gradient(180deg, #60a5fa 0%, #93c5fd 30%, #bfdbfe 65%, #eff6ff 100%)',
-    dark:      false,
     particles: null,
   },
   cloudy: {
     bg:        'linear-gradient(180deg, #475569 0%, #64748b 35%, #94a3b8 65%, #cbd5e1 100%)',
-    dark:      true,
     particles: null,
   },
   fog: {
     bg:        'linear-gradient(180deg, #94a3b8 0%, #b8c8d4 30%, #d4dfe8 60%, #edf2f7 100%)',
-    dark:      false,
     particles: 'fog',
   },
   drizzle: {
     bg:        'linear-gradient(180deg, #334155 0%, #475569 40%, #64748b 70%, #94a3b8 100%)',
-    dark:      true,
     particles: 'drizzle',
   },
   rain: {
     bg:        'linear-gradient(180deg, #0f172a 0%, #1e293b 35%, #334155 65%, #475569 100%)',
-    dark:      true,
     particles: 'rain',
   },
   snow: {
     bg:        'linear-gradient(180deg, #bfdbfe 0%, #dbeafe 30%, #e0f2fe 60%, #f0f9ff 100%)',
-    dark:      false,
     particles: 'snow',
   },
   thunder: {
     bg:        'linear-gradient(180deg, #020617 0%, #0f172a 35%, #1e293b 65%, #334155 100%)',
-    dark:      true,
     particles: 'thunder',
   },
 };
+
+// Decide light/dark header text from the gradient's own first color stop,
+// rather than a hand-maintained flag that can drift out of sync with the
+// actual colors (the root cause of low-contrast header text bugs).
+function isDarkGradient(gradientCss) {
+  const match = gradientCss.match(/#([0-9a-fA-F]{6})/);
+  if (!match) return false;
+  const hex = match[1];
+  const [r, g, b] = [0, 2, 4].map(i => parseInt(hex.slice(i, i + 2), 16) / 255);
+  const lin = v => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4);
+  const luminance = 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+  return luminance < 0.2;
+}
 
 // Resize canvas to fill viewport
 function resizeBgCanvas() {
@@ -229,7 +234,7 @@ function updateBackground(type) {
   const theme = BG_THEMES[type] ?? BG_THEMES.partly;
 
   crossfadeBg(theme.bg);
-  document.body.classList.toggle('bg-dark', !!theme.dark);
+  document.body.classList.toggle('bg-dark', isDarkGradient(theme.bg));
 
   // Tear down old particles / lightning
   if (bgRafId) { cancelAnimationFrame(bgRafId); bgRafId = null; }
@@ -910,12 +915,12 @@ function resetToHome() {
   bgParticles = [];
   bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
   currentBgType = null;
-  crossfadeBg(
+  const idleBg =
     'radial-gradient(ellipse 60% 46% at 82% 46%, rgba(236, 72, 153, 0.24), transparent 72%), ' +
     'radial-gradient(ellipse 55% 42% at 8% 78%, rgba(99, 102, 241, 0.20), transparent 72%), ' +
-    '#fafbfc'
-  );
-  document.body.classList.remove('bg-dark');
+    '#fafbfc';
+  crossfadeBg(idleBg);
+  document.body.classList.toggle('bg-dark', isDarkGradient(idleBg));
 
   showPlaceholder();
   input.focus();
