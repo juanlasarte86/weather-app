@@ -1008,7 +1008,11 @@ function buildHourlyStrip(hourly, currentTime) {
 
 function showWeather(data) {
   lastWeatherData = data;
-  if (!data.phrase) data.phrase = weatherPhrase(data.weathercode);
+  if (data.name?.toLowerCase() === 'montevideo') {
+    data.phrase = "It is cold as Fede Valverde's chest ❄️";
+  } else if (!data.phrase) {
+    data.phrase = weatherPhrase(data.weathercode);
+  }
   saveRecentSearch(data.name, data.country);
   updateBackground(WMO_ICON[data.weathercode] ?? 'cloudy');
   const { name, country, temperature, weathercode, windspeed, winddirection, daily, hourly, currentTime, phrase } = data;
