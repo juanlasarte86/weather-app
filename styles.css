@@ -137,16 +137,52 @@ body.bg-dark .wm-axo {
 .home-btn:hover  { opacity: 0.85; }
 .home-btn:active { opacity: 0.6; }
 
-.logo-mark {
+.logo-wrap {
+  position: relative;
   width: 58px;
   height: 62px;
-  object-fit: contain;
   flex-shrink: 0;
+  overflow: visible;
   transition: transform 0.25s ease;
 }
 
-.home-btn:hover .logo-mark {
+.home-btn:hover .logo-wrap {
   transform: rotate(-8deg) scale(1.08);
+}
+
+.logo-mark {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.hover-drops {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.hover-drops .drop {
+  opacity: 0;
+}
+
+.home-btn:hover .hover-drops .drop {
+  animation: logo-drop-fall 0.9s ease-in infinite;
+}
+
+.hover-drops .drop:nth-child(1) { animation-delay: 0s; }
+.hover-drops .drop:nth-child(2) { animation-delay: 0.25s; }
+.hover-drops .drop:nth-child(3) { animation-delay: 0.5s; }
+
+@keyframes logo-drop-fall {
+  0%   { transform: translateY(-3px); opacity: 0; }
+  15%  { opacity: 1; }
+  75%  { opacity: 0.7; }
+  100% { transform: translateY(9px); opacity: 0; }
 }
 
 /* ── Unit toggle ── */
