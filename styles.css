@@ -157,8 +157,8 @@ body.bg-dark .wm-axo {
 
 .unit-btn.active {
   background: #fff;
-  color: #1e40af;
-  box-shadow: 0 1px 6px rgba(59, 130, 246, 0.2);
+  color: #be185d;
+  box-shadow: 0 1px 6px rgba(236, 72, 153, 0.2);
 }
 
 /* ── Search ── */
@@ -201,7 +201,7 @@ search button {
   flex-shrink: 0;
   border: none;
   cursor: pointer;
-  background: #3b82f6;
+  background: #ec4899;
   color: #fff;
   font-size: 0.95rem;
   font-weight: 600;
@@ -211,15 +211,15 @@ search button {
 }
 
 search button:hover {
-  background: #2563eb;
+  background: #db2777;
 }
 
 search button:active {
-  background: #1d4ed8;
+  background: #be185d;
 }
 
 search button:disabled {
-  background: #93c5fd;
+  background: #f9a8d4;
   cursor: not-allowed;
 }
 
@@ -765,7 +765,7 @@ search {
 
 .autocomplete-item:hover,
 .autocomplete-item[aria-selected="true"] {
-  background: #eff6ff;
+  background: #fdf2f8;
 }
 
 .ac-name {
