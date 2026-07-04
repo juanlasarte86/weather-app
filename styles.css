@@ -147,7 +147,7 @@ body.bg-dark .wm-axo {
 }
 
 .home-btn:hover .logo-wrap {
-  transform: rotate(-8deg) scale(1.08);
+  transform: scale(1.08);
 }
 
 .logo-mark {
@@ -170,8 +170,17 @@ body.bg-dark .wm-axo {
   opacity: 0;
 }
 
+.eyes-look-up {
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
 .home-btn:hover .hover-drops .drop {
   animation: logo-drop-fall 0.9s ease-in infinite;
+}
+
+.home-btn:hover .eyes-look-up {
+  opacity: 1;
 }
 
 .hover-drops .drop:nth-child(1) { animation-delay: 0s; }
