@@ -820,9 +820,9 @@ function buildChart(daily, days) {
       </defs>
       <g>${gridSvg}</g>
       <path d="${curvePath(lowPts)}"  fill="none" stroke="#cbd5e1" stroke-width="2"   stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="${curvePath(highPts)}" fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="${curvePath(highPts)}" fill="none" stroke="#db2777" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
       <g>${dots(lowPts,  '#cbd5e1')}</g>
-      <g>${dots(highPts, '#3b82f6')}</g>
+      <g>${dots(highPts, '#db2777')}</g>
       <g>${labelsSvg}</g>
       <line class="chart-crosshair"
             x1="0" y1="${pad.top}" x2="0" y2="${pad.top + plotH}"
@@ -830,7 +830,7 @@ function buildChart(daily, days) {
       <g class="chart-tip" visibility="hidden">
         <rect class="tip-bg" rx="7" fill="white" filter="url(#tip-shadow)"/>
         <text class="tip-day"  font-size="10"                  fill="#64748b"/>
-        <text class="tip-high" font-size="13" font-weight="700" fill="#2563eb"/>
+        <text class="tip-high" font-size="13" font-weight="700" fill="#be185d"/>
         <text class="tip-low"  font-size="12"                  fill="#64748b"/>
       </g>
       <g>${hitsSvg}</g>
@@ -910,7 +910,7 @@ function resetToHome() {
   bgParticles = [];
   bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
   currentBgType = null;
-  crossfadeBg('linear-gradient(180deg, #dbeafe 0%, #eff6ff 25%, #f0f4f8 65%)');
+  crossfadeBg('linear-gradient(180deg, #fbcfe8 0%, #fce7f3 25%, #f8f5f6 65%)');
   document.body.classList.remove('bg-dark');
 
   showPlaceholder();
