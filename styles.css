@@ -119,7 +119,8 @@ body.bg-dark .wm-axo {
 
 .logo-mark {
   width: 58px;
-  height: 57px;
+  height: 62px;
+  object-fit: contain;
   flex-shrink: 0;
   transition: transform 0.25s ease;
 }

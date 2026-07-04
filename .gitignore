@@ -2,3 +2,4 @@
 serve.py
 .DS_Store
 *.log
+.vercel
