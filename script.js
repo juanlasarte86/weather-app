@@ -921,6 +921,7 @@ function resetToHome() {
     '#fafbfc';
   crossfadeBg(idleBg);
   document.body.classList.toggle('bg-dark', isDarkGradient(idleBg));
+  document.getElementById('logo-wrap').classList.remove('mascot-sunny', 'mascot-cold');
 
   showPlaceholder();
   input.focus();
@@ -1006,11 +1007,21 @@ function buildHourlyStrip(hourly, currentTime) {
   return `<section class="hourly" aria-label="Hourly forecast">${cards.join('')}</section>`;
 }
 
+// Dress the mascot for the occasion: shades for sunny days, scarf + beanie
+// when it's cold. temperature is always raw Celsius from the API regardless
+// of the displayed unit, so the 10° threshold holds regardless of toggle state.
+function updateMascotOutfit(weathercode, temperature) {
+  const logoWrap = document.getElementById('logo-wrap');
+  logoWrap.classList.toggle('mascot-sunny', WMO_ICON[weathercode] === 'sunny');
+  logoWrap.classList.toggle('mascot-cold', temperature < 10);
+}
+
 function showWeather(data) {
   lastWeatherData = data;
   if (!data.phrase) data.phrase = weatherPhrase(data.weathercode);
   saveRecentSearch(data.name, data.country);
   updateBackground(WMO_ICON[data.weathercode] ?? 'cloudy');
+  updateMascotOutfit(data.weathercode, data.temperature);
   const { name, country, temperature, weathercode, windspeed, winddirection, daily, hourly, currentTime, phrase } = data;
   const { label } = wmoCondition(weathercode);
 

@@ -137,17 +137,40 @@ body.bg-dark .wm-axo {
 .home-btn:hover  { opacity: 0.85; }
 .home-btn:active { opacity: 0.6; }
 
-.logo-mark {
+.logo-wrap {
+  position: relative;
   width: 58px;
   height: 62px;
-  object-fit: contain;
   flex-shrink: 0;
   transition: transform 0.25s ease;
 }
 
-.home-btn:hover .logo-mark {
+.home-btn:hover .logo-wrap {
   transform: rotate(-8deg) scale(1.08);
 }
+
+.logo-mark {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.logo-accessories {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.acc-sunglasses,
+.acc-coldgear {
+  display: none;
+}
+
+.logo-wrap.mascot-sunny .acc-sunglasses { display: block; }
+.logo-wrap.mascot-cold  .acc-coldgear   { display: block; }
 
 /* ── Unit toggle ── */
 
