@@ -910,7 +910,11 @@ function resetToHome() {
   bgParticles = [];
   bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
   currentBgType = null;
-  crossfadeBg('linear-gradient(180deg, #fbcfe8 0%, #fce7f3 25%, #f8f5f6 65%)');
+  crossfadeBg(
+    'radial-gradient(ellipse 60% 46% at 82% 46%, rgba(236, 72, 153, 0.24), transparent 72%), ' +
+    'radial-gradient(ellipse 55% 42% at 8% 78%, rgba(99, 102, 241, 0.20), transparent 72%), ' +
+    '#fafbfc'
+  );
   document.body.classList.remove('bg-dark');
 
   showPlaceholder();
