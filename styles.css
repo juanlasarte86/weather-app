@@ -143,11 +143,6 @@ body.bg-dark .wm-axo {
   object-fit: contain;
   flex-shrink: 0;
   transition: transform 0.25s ease;
-  /* Dark contact shadow + soft light glow, so the artwork keeps an edge
-     against backgrounds close to its own pink/blue hues either way. */
-  filter:
-    drop-shadow(0 2px 6px rgba(0, 0, 0, 0.18))
-    drop-shadow(0 0 10px rgba(255, 255, 255, 0.4));
 }
 
 .home-btn:hover .logo-mark {
