@@ -921,6 +921,8 @@ function resetToHome() {
     '#fafbfc';
   crossfadeBg(idleBg);
   document.body.classList.toggle('bg-dark', isDarkGradient(idleBg));
+  document.getElementById('logo-mark').src = MASCOT_FILES.umbrella;
+  document.getElementById('logo-wrap').classList.add('variant-umbrella');
 
   showPlaceholder();
   input.focus();
@@ -1006,6 +1008,29 @@ function buildHourlyStrip(hourly, currentTime) {
   return `<section class="hourly" aria-label="Hourly forecast">${cards.join('')}</section>`;
 }
 
+const MASCOT_FILES = {
+  umbrella:   'mascot.png',
+  winter:     'mascot-winter.png',
+  run:        'mascot-run.png',
+  sunglasses: 'mascot-sunglasses.png',
+};
+
+// Rain (drizzle/rain/thunder) always keeps the umbrella regardless of
+// temperature; everything else picks an outfit by how warm it actually is.
+function pickMascotVariant(weathercode, temperature) {
+  const condition = WMO_ICON[weathercode] ?? 'cloudy';
+  if (condition === 'drizzle' || condition === 'rain' || condition === 'thunder') return 'umbrella';
+  if (temperature < 15) return 'winter';
+  if (temperature <= 25) return 'run';
+  return 'sunglasses';
+}
+
+function updateMascotVariant(weathercode, temperature) {
+  const variant = pickMascotVariant(weathercode, temperature);
+  document.getElementById('logo-mark').src = MASCOT_FILES[variant];
+  document.getElementById('logo-wrap').classList.toggle('variant-umbrella', variant === 'umbrella');
+}
+
 function showWeather(data) {
   lastWeatherData = data;
   if (data.name?.toLowerCase() === 'montevideo') {
@@ -1015,6 +1040,7 @@ function showWeather(data) {
   }
   saveRecentSearch(data.name, data.country);
   updateBackground(WMO_ICON[data.weathercode] ?? 'cloudy');
+  updateMascotVariant(data.weathercode, data.temperature);
   const { name, country, temperature, weathercode, windspeed, winddirection, daily, hourly, currentTime, phrase } = data;
   const { label } = wmoCondition(weathercode);
 
