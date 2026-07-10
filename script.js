@@ -1033,11 +1033,7 @@ function updateMascotVariant(weathercode, temperature) {
 
 function showWeather(data) {
   lastWeatherData = data;
-  if (data.name?.toLowerCase() === 'montevideo') {
-    data.phrase = "It is cold as Fede Valverde's chest ❄️";
-  } else if (!data.phrase) {
-    data.phrase = weatherPhrase(data.weathercode);
-  }
+  if (!data.phrase) data.phrase = weatherPhrase(data.weathercode);
   saveRecentSearch(data.name, data.country);
   updateBackground(WMO_ICON[data.weathercode] ?? 'cloudy');
   updateMascotVariant(data.weathercode, data.temperature);
